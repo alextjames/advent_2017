@@ -1,5 +1,6 @@
 import click
 from collections import namedtuple
+from math import sqrt, ceil
 
 Coord = namedtuple('Coord', ['x', 'y'])
 
@@ -10,25 +11,23 @@ def spiral_distance(addr):
 
 
 def spiral_coords(addr):
-    max_in_layer = 1
-    prev_max = 0
-    n = 0
 
     if addr == 1:
         return 0, 0
 
-    while addr > max_in_layer:
-        n += 1
-        prev_max = max_in_layer
-        max_in_layer = max_in_layer + 8 + 8 * (n - 1)
+    side_size = ceil(sqrt(addr))
+    side_size = side_size if side_size % 2 else side_size + 1
+    layer = int(side_size / 2)
+    prev_max = pow(side_size - 2, 2)
+    max_in_layer = pow(side_size, 2)
 
     index_in_layer = addr - prev_max
     layer_size = max_in_layer - prev_max
     index_in_layer = index_in_layer % layer_size
 
     quadrant, quadrant_index = divmod(index_in_layer, int((layer_size / 4)))
-    in_layer_distance = quadrant_index - n
-    distnace_to_layer = n
+    in_layer_distance = quadrant_index - layer
+    distnace_to_layer = layer
 
     if quadrant == 0:
         return Coord(distnace_to_layer, in_layer_distance)
